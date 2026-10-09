@@ -29,14 +29,7 @@ apiClient.interceptors.request.use(
 // Response interceptor to format errors consistently
 apiClient.interceptors.response.use(
   (response) => response,
-  (error: AxiosError<{ message?: string }>) => {
-    const customMessage =
-      error.response?.data?.message ||
-      error.message ||
-      "An unexpected API error occurred";
-    
-    return Promise.reject(new Error(customMessage));
-  }
+  (error: AxiosError<{ message?: string }>) => Promise.reject(error)
 );
 
 export default apiClient;

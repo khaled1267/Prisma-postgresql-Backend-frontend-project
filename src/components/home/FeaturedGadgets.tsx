@@ -77,8 +77,8 @@ export default function FeaturedGadgets({
         {!isLoading && !isError && (
           <>
             {products.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {products.map((product) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {products.slice(0, 6).map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>

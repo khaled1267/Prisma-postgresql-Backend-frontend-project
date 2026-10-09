@@ -18,12 +18,19 @@ import {
   AlertCircle,
   CheckCircle2,
   ArrowLeft,
+  RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
 
 export default function AddGadgetForm() {
   const router = useRouter();
-  const { data: categories, isLoading: isLoadingCategories } = useCategories();
+  const {
+    data: categories,
+    isLoading: isLoadingCategories,
+    isError: isCategoriesError,
+    error: categoriesError,
+    refetch: refetchCategories,
+  } = useCategories();
   const createProductMutation = useCreateProductMutation();
 
   const [formData, setFormData] = useState({
@@ -155,9 +162,16 @@ export default function AddGadgetForm() {
               value={formData.categoryId}
               onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
               disabled={isLoadingCategories}
+              aria-label="Select gadget category"
             >
               <option value="">
-                {isLoadingCategories ? "Loading categories..." : "Select Hardware Category..."}
+                {isLoadingCategories
+                  ? "Loading categories..."
+                  : isCategoriesError
+                    ? "Could not load categories"
+                    : categories?.length
+                      ? "Select Hardware Category..."
+                      : "No categories available"}
               </option>
               {categories?.map((cat) => (
                 <option key={cat.id} value={cat.id}>
@@ -165,6 +179,37 @@ export default function AddGadgetForm() {
                 </option>
               ))}
             </select>
+            {isCategoriesError && (
+              <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-error">
+                <span>{categoriesError.message}</span>
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-xs"
+                  onClick={() => refetchCategories()}
+                >
+                  <RefreshCw className="h-3 w-3" /> Retry
+                </button>
+              </div>
+            )}
+            {!isLoadingCategories && !isCategoriesError && !categories?.length && (
+              <p className="mt-2 text-xs text-base-content/70">
+                No categories have been added yet.{" "}
+                <Link
+                  href="/admin/categories"
+                  className="font-semibold text-primary underline"
+                >
+                  Add a category
+                </Link>
+                , then return here to select it.
+                <button
+                  type="button"
+                  className="ml-2 inline-flex items-center gap-1 font-semibold text-primary underline"
+                  onClick={() => refetchCategories()}
+                >
+                  <RefreshCw className="h-3 w-3" /> Refresh
+                </button>
+              </p>
+            )}
             {errors.categoryId && (
               <span className="text-xs text-error mt-1 block font-medium">
                 {errors.categoryId}

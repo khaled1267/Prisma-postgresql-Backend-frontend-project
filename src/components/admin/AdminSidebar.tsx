@@ -27,7 +27,8 @@ export default function AdminSidebar() {
     { label: "Dashboard Overview", href: "/admin", icon: <LayoutDashboard className="w-4 h-4" /> },
     { label: "Manage Gadgets", href: "/admin/gadgets", icon: <Compass className="w-4 h-4" /> },
     { label: "Add New Gadget", href: "/admin/gadgets/add", icon: <PlusCircle className="w-4 h-4" /> },
-    { label: "Category Divisions", href: "/categories", icon: <Layers className="w-4 h-4" /> },
+    { label: "Manage Users", href: "/admin/users", icon: <Users className="w-4 h-4" /> },
+    { label: "Manage Categories", href: "/admin/categories", icon: <Layers className="w-4 h-4" /> },
     { label: "Manage Orders", href: "/admin/orders", icon: <Package className="w-4 h-4" /> },
   ];
 

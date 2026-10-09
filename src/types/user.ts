@@ -13,4 +13,5 @@ export interface User {
 export interface UpdateUserDTO {
   name?: string;
   email?: string;
+  role?: UserRole;
 }
