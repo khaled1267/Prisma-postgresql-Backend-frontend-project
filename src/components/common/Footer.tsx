@@ -1,113 +1,105 @@
 import Link from "next/link";
-import { Cpu, ShieldCheck, Heart, Mail, Phone, MapPin, Sparkles } from "lucide-react";
+import { ArrowUpRight, Bot, Cpu, Layers, ShoppingBag } from "lucide-react";
 import { APP_NAME } from "@/utils/constants";
+
+const marketplaceLinks = [
+  { label: "Explore gadgets", href: "/gadgets", icon: Cpu },
+  { label: "Browse categories", href: "/categories", icon: Layers },
+  { label: "Ask the AI Copilot", href: "/assistant", icon: Bot },
+];
+
+const accountLinks = [
+  { label: "Sign in", href: "/login" },
+  { label: "Create an account", href: "/register" },
+  { label: "Shopping cart", href: "/cart" },
+  { label: "Your orders", href: "/orders" },
+];
 
 export default function Footer() {
   return (
-    <footer className="bg-base-200 border-t border-base-300 text-base-content mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-          
-          {/* Brand Col */}
-          <div className="lg:col-span-2 space-y-4">
-            <Link href="/" className="inline-flex items-center gap-2 font-black text-xl text-primary">
-              <div className="p-1.5 rounded-xl bg-gradient-to-tr from-primary to-secondary text-base-100 shadow-md">
-                <Cpu className="w-5 h-5" />
-              </div>
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-info to-secondary">
+    <footer className="relative mt-auto overflow-hidden border-t border-base-300/80 bg-base-200/70 text-base-content">
+      <div className="pointer-events-none absolute -right-32 -top-36 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
+      <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-14">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr]">
+          <div className="space-y-4">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-xl font-black tracking-tight"
+            >
+              <span className="rounded-xl bg-gradient-to-tr from-primary to-secondary p-2 text-base-100 shadow-lg shadow-primary/15">
+                <Cpu className="h-5 w-5" />
+              </span>
+              <span className="bg-gradient-to-r from-primary via-info to-secondary bg-clip-text text-transparent">
                 {APP_NAME}
               </span>
             </Link>
-
-            <p className="text-xs text-base-content/70 leading-relaxed max-w-sm">
-              Next-generation marketplace for AI wearables, smart electronics, autonomous drones, and futuristic automation gear.
+            <p className="max-w-sm text-sm leading-relaxed text-base-content/65">
+              Explore the live gadget catalog, compare product details, and use
+              AI-powered assistance to find technology that fits your needs.
             </p>
-
-            <div className="flex items-center gap-2 pt-2">
-              <span className="badge badge-sm badge-success gap-1 text-[10px] font-bold text-base-100">
-                <ShieldCheck className="w-3 h-3" /> Deployed on Render
-              </span>
-              <span className="badge badge-sm badge-outline text-[10px] text-base-content/60">
-                Prisma ORM
-              </span>
-            </div>
+            <Link
+              href="/assistant"
+              className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-2 text-xs font-semibold text-primary transition-colors hover:border-primary/40 hover:bg-primary/10"
+            >
+              <Bot className="h-4 w-4" />
+              Talk to GadgetAI Copilot
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <h4 className="font-bold text-sm text-base-content mb-3 uppercase tracking-wider text-[11px] text-primary">
+            <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-base-content/45">
               Marketplace
-            </h4>
-            <ul className="space-y-2 text-xs text-base-content/70">
-              <li>
-                <Link href="/" className="hover:text-primary transition">Home</Link>
-              </li>
-              <li>
-                <Link href="/gadgets" className="hover:text-primary transition">Explore Gadgets</Link>
-              </li>
-              <li>
-                <Link href="/categories" className="hover:text-primary transition">Categories</Link>
-              </li>
-              <li>
-                <Link href="/about" className="hover:text-primary transition">About Us</Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-primary transition">Contact Support</Link>
-              </li>
+            </h2>
+            <ul className="space-y-3">
+              {marketplaceLinks.map(({ label, href, icon: Icon }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    className="group inline-flex items-center gap-2 text-sm text-base-content/70 transition-colors hover:text-primary"
+                  >
+                    <Icon className="h-4 w-4 text-base-content/40 transition-colors group-hover:text-primary" />
+                    {label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Customer Support */}
           <div>
-            <h4 className="font-bold text-sm text-base-content mb-3 uppercase tracking-wider text-[11px] text-primary">
-              Account & Help
-            </h4>
-            <ul className="space-y-2 text-xs text-base-content/70">
-              <li>
-                <Link href="/login" className="hover:text-primary transition">Login</Link>
-              </li>
-              <li>
-                <Link href="/register" className="hover:text-primary transition">Create Account</Link>
-              </li>
-              <li>
-                <Link href="/cart" className="hover:text-primary transition">My Cart</Link>
-              </li>
-              <li>
-                <Link href="/orders" className="hover:text-primary transition">Track Orders</Link>
-              </li>
+            <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-base-content/45">
+              Your account
+            </h2>
+            <ul className="space-y-3">
+              {accountLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="inline-flex items-center gap-2 text-sm text-base-content/70 transition-colors hover:text-primary"
+                  >
+                    {link.href === "/cart" && (
+                      <ShoppingBag className="h-4 w-4 text-base-content/40" />
+                    )}
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
-
-          {/* Contact Details */}
-          <div>
-            <h4 className="font-bold text-sm text-base-content mb-3 uppercase tracking-wider text-[11px] text-primary">
-              Get in Touch
-            </h4>
-            <ul className="space-y-2.5 text-xs text-base-content/70">
-              <li className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-primary shrink-0" />
-                <span>support@gadgetai.com</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5 text-primary shrink-0" />
-                <span>+1 (800) 555-GADGET</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-primary shrink-0" />
-                <span>Silicon Valley, CA</span>
-              </li>
-            </ul>
-          </div>
-
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-12 pt-6 border-t border-base-300/80 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-base-content/50">
-          <p>© {new Date().getFullYear()} {APP_NAME}. All rights reserved.</p>
-          <div className="flex items-center gap-4">
-            <Link href="/privacy" className="hover:text-primary transition">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-primary transition">Terms of Service</Link>
-          </div>
+        <div className="mt-10 flex flex-col gap-3 border-t border-base-300/80 pt-5 text-xs text-base-content/45 sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            © {new Date().getFullYear()} {APP_NAME}. Product information is
+            provided by marketplace listings.
+          </p>
+          <Link
+            href="/gadgets"
+            className="inline-flex items-center gap-1 font-semibold transition-colors hover:text-primary"
+          >
+            Browse the catalog
+            <ArrowUpRight className="h-3.5 w-3.5" />
+          </Link>
         </div>
       </div>
     </footer>

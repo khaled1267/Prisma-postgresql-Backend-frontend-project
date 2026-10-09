@@ -17,10 +17,6 @@ import {
   X,
   Compass,
   Home,
-  Info,
-  Mail,
-  UserCheck,
-  UserX,
   Sparkles,
 } from "lucide-react";
 import { APP_NAME } from "@/utils/constants";
@@ -37,7 +33,8 @@ export default function Navbar() {
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   // Helper for active link highlighting
-  const isActive = (path: string) => pathname === path;
+  const isActive = (path: string) =>
+    pathname === path || (path !== "/" && pathname.startsWith(`${path}/`));
 
   // Primary Navigation Links required by prompt
   const mainNavLinks = [
@@ -45,8 +42,6 @@ export default function Navbar() {
     { label: "Explore Gadgets", href: "/gadgets", icon: <Compass className="w-4 h-4" /> },
     { label: "Categories", href: "/categories", icon: <Layers className="w-4 h-4" /> },
     { label: "AI Copilot", href: "/assistant", icon: <Sparkles className="w-4 h-4 text-warning" /> },
-    { label: "About", href: "/about", icon: <Info className="w-4 h-4" /> },
-    { label: "Contact", href: "/contact", icon: <Mail className="w-4 h-4" /> },
   ];
 
   const isAdmin = user?.role === "ADMIN";
@@ -54,7 +49,7 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 bg-base-100/90 backdrop-blur-md border-b border-base-300 transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-4">
+        <div className="flex items-center justify-between h-16 gap-2 sm:gap-4">
           
           {/* Left: Brand Logo & Mobile Menu Toggle */}
           <div className="flex items-center gap-3">
@@ -85,6 +80,7 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
+                aria-current={isActive(link.href) ? "page" : undefined}
                 className={`px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
                   isActive(link.href)
                     ? "bg-primary/10 text-primary font-bold"
@@ -98,11 +94,11 @@ export default function Navbar() {
           </nav>
 
           {/* Right: Auth / User State Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             
             {/* UNAUTHENTICATED GUEST USER UI */}
             {!isAuthenticated && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 <Link href="/login">
                   <Button variant="ghost" size="sm">
                     Login
@@ -181,7 +177,7 @@ export default function Navbar() {
                           </Link>
                         </li>
                         <li>
-                          <Link href="/admin/gadgets/new">
+                          <Link href="/admin/gadgets/add">
                             <PlusCircle className="w-4 h-4 text-accent" /> Add Gadget
                           </Link>
                         </li>
@@ -275,7 +271,7 @@ export default function Navbar() {
                     <Link href="/admin" onClick={closeMobileMenu} className="flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-accent hover:bg-base-200">
                       <Settings className="w-4 h-4" /> Admin Dashboard
                     </Link>
-                    <Link href="/admin/gadgets/new" onClick={closeMobileMenu} className="flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-accent hover:bg-base-200">
+                    <Link href="/admin/gadgets/add" onClick={closeMobileMenu} className="flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-accent hover:bg-base-200">
                       <PlusCircle className="w-4 h-4" /> Add Gadget
                     </Link>
                     <Link href="/admin/gadgets" onClick={closeMobileMenu} className="flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-accent hover:bg-base-200">

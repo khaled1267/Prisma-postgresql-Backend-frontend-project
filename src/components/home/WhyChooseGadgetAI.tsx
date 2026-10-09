@@ -1,30 +1,30 @@
-import { Bot, ShieldCheck, Truck, Headphones, Sparkles } from "lucide-react";
+import { Bot, SearchCheck, Boxes, SlidersHorizontal, Sparkles } from "lucide-react";
 
 export default function WhyChooseGadgetAI() {
   const features = [
     {
-      icon: <Bot className="w-7 h-7 text-primary" />,
-      title: "Smart AI Curation",
+      icon: <SearchCheck className="w-7 h-7 text-primary" />,
+      title: "Search the real catalog",
       description:
-        "Every gadget is evaluated by our recommendation engine for compatibility, build quality, and real-world performance.",
+        "Find products by title or description, then narrow the results by category and stock availability.",
     },
     {
-      icon: <ShieldCheck className="w-7 h-7 text-secondary" />,
-      title: "Verified Hardware Warranty",
+      icon: <Boxes className="w-7 h-7 text-secondary" />,
+      title: "Clear product details",
       description:
-        "Direct manufacturer warranties and 100% authentic hardware certification on all smart electronics.",
+        "Review each listing's description, category, current price, and inventory before adding it to your cart.",
     },
     {
-      icon: <Truck className="w-7 h-7 text-warning" />,
-      title: "Express Global Shipping",
+      icon: <SlidersHorizontal className="w-7 h-7 text-warning" />,
+      title: "Shop your way",
       description:
-        "Real-time order tracking with priority fulfillment from automated fulfillment hubs worldwide.",
+        "Browse specialist categories, adjust your budget, and keep track of the products you choose.",
     },
     {
-      icon: <Headphones className="w-7 h-7 text-success" />,
-      title: "24/7 Expert Tech Support",
+      icon: <Bot className="w-7 h-7 text-success" />,
+      title: "GadgetAI Copilot",
       description:
-        "Dedicated hardware engineers available around the clock for setup assistance and troubleshooting.",
+        "Ask the connected AI assistant to help you explore products and compare options from the marketplace.",
     },
   ];
 

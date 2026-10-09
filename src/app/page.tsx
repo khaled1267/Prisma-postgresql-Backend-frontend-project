@@ -14,6 +14,7 @@ import { useProducts } from "@/hooks/useProducts";
 import { useCategories } from "@/hooks/useCategories";
 import { useReviews } from "@/hooks/useReviews";
 import { Bot, Sparkles } from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,15 +32,14 @@ export default function Home() {
   } = useProducts();
 
   // GET /api/categories
-  const {
-    data: categories,
-    isLoading: isLoadingCategories,
-  } = useCategories();
+  const { data: categories } = useCategories();
 
   // GET /api/reviews
   const {
     data: reviews,
     isLoading: isLoadingReviews,
+    isError: isErrorReviews,
+    error: reviewsError,
   } = useReviews();
 
   // Filter products by search term and selected category
@@ -86,7 +86,12 @@ export default function Home() {
       <AiRecommendationSection products={products} />
 
       {/* 6. Customer Reviews Preview Section */}
-      <ReviewsPreviewSection reviews={reviews} isLoading={isLoadingReviews} />
+      <ReviewsPreviewSection
+        reviews={reviews}
+        isLoading={isLoadingReviews}
+        isError={isErrorReviews}
+        errorMessage={reviewsError?.message}
+      />
 
       {/* 7. Call To Action Banner */}
       <CtaSection />
@@ -95,20 +100,34 @@ export default function Home() {
       <Modal
         isOpen={isAiModalOpen}
         onClose={() => setIsAiModalOpen(false)}
-        title="🤖 AI Gadget Matchmaker Assistant"
-        description="Our AI model analyzes your hardware preferences and suggests the ideal smart gadget."
+        title="GadgetAI Copilot"
+        description="Get product guidance from the marketplace AI assistant."
         footerActions={
-          <Button variant="primary" size="sm" onClick={() => setIsAiModalOpen(false)}>
-            Close Assistant
-          </Button>
+          <>
+            <Button variant="ghost" size="sm" onClick={() => setIsAiModalOpen(false)}>
+              Not now
+            </Button>
+            <Link href="/assistant" onClick={() => setIsAiModalOpen(false)}>
+              <Button
+                variant="primary"
+                size="sm"
+                rightIcon={<Bot className="h-4 w-4" />}
+              >
+                Open Copilot
+              </Button>
+            </Link>
+          </>
         }
       >
-        <div className="p-4 bg-base-100 rounded-2xl border border-primary/20 space-y-3 my-2">
-          <div className="flex items-center gap-2 text-primary font-bold text-xs">
-            <Sparkles className="w-4 h-4" /> AI Analysis Complete
+        <div className="my-2 space-y-3 rounded-2xl border border-primary/20 bg-base-100 p-5">
+          <div className="flex items-center gap-2 text-sm font-bold text-primary">
+            <Sparkles className="h-4 w-4" />
+            Recommendations grounded in your request
           </div>
-          <p className="text-xs text-base-content/80">
-            Based on current Render API catalog trends, our top recommended gadget for software engineering & automation is the <strong>Neural Core X1 Wearable</strong>.
+          <p className="text-sm leading-relaxed text-base-content/70">
+            Describe how you plan to use a gadget, what features matter, or
+            which products you want to compare. The Copilot can respond with
+            recommendations from the connected marketplace catalog.
           </p>
         </div>
       </Modal>

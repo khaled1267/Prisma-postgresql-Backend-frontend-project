@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
-import { PlusCircle, RefreshCw, Server } from "lucide-react";
+import { PlusCircle, RefreshCw, ShieldCheck } from "lucide-react";
 
 interface AdminHeaderProps {
   title: string;
@@ -15,9 +15,9 @@ export default function AdminHeader({ title, description, onRefresh }: AdminHead
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 bg-base-200 border border-base-300 rounded-3xl p-6 shadow-xl">
       <div>
-        <div className="flex items-center gap-2 mb-1">
-          <span className="badge badge-accent badge-sm font-bold text-[10px] uppercase gap-1">
-            <Server className="w-3 h-3" /> Render API Online
+        <div className="mb-1 flex items-center gap-2">
+          <span className="badge badge-accent badge-sm gap-1 text-[10px] font-bold uppercase">
+            <ShieldCheck className="h-3 w-3" /> Marketplace administration
           </span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-black text-base-content tracking-tight">{title}</h1>

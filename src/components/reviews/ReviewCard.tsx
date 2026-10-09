@@ -72,7 +72,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
     });
   };
 
-  const reviewerName = review.user?.name || "Verified Buyer";
+  const reviewerName = review.user?.name || "Marketplace member";
   const initial = reviewerName.charAt(0).toUpperCase();
 
   return (
@@ -125,9 +125,15 @@ export default function ReviewCard({ review }: ReviewCardProps) {
       </div>
 
       {/* Review Comment Text */}
-      <p className="text-xs text-base-content/80 leading-relaxed pl-12">
-        {review.comment || "Great product quality and fast delivery."}
-      </p>
+      {review.comment ? (
+        <p className="pl-12 text-xs leading-relaxed text-base-content/80">
+          {review.comment}
+        </p>
+      ) : (
+        <p className="pl-12 text-xs text-base-content/50">
+          No written comment was provided with this rating.
+        </p>
+      )}
 
       {/* Edit Review Modal */}
       <Modal

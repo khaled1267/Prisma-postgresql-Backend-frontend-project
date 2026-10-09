@@ -132,7 +132,7 @@ export default function AddGadgetForm() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* Left Column: Form Controls */}
-        <div className="lg:col-span-2 space-y-5 bg-base-200 border border-base-300 rounded-3xl p-6 shadow-xl">
+        <div className="surface-panel space-y-5 rounded-3xl p-5 sm:p-6 lg:col-span-2">
           
           {/* Gadget Title */}
           <div>
@@ -140,7 +140,7 @@ export default function AddGadgetForm() {
               <span className="label-text font-bold text-xs">Gadget Title *</span>
             </label>
             <Input
-              placeholder="e.g. Neural Core X1 Wearable"
+              placeholder="Enter product name"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               error={errors.title}
@@ -229,7 +229,7 @@ export default function AddGadgetForm() {
                 type="number"
                 step="0.01"
                 min="0"
-                placeholder="299.99"
+                placeholder="Enter price"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                 error={errors.price}
@@ -245,7 +245,7 @@ export default function AddGadgetForm() {
               <Input
                 type="number"
                 min="0"
-                placeholder="50"
+                placeholder="Enter quantity"
                 value={formData.stock}
                 onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
                 error={errors.stock}
@@ -261,7 +261,7 @@ export default function AddGadgetForm() {
               <span className="label-text font-bold text-xs">Image URL (Optional)</span>
             </label>
             <Input
-              placeholder="https://images.unsplash.com/photo-..."
+              placeholder="Paste image URL"
               value={formData.image}
               onChange={(e) => setFormData({ ...formData, image: e.target.value })}
               leftIcon={<ImageIcon className="w-4 h-4 text-primary" />}
@@ -278,7 +278,7 @@ export default function AddGadgetForm() {
             </label>
             <textarea
               className="textarea textarea-bordered w-full bg-base-100 rounded-xl text-xs leading-relaxed h-28"
-              placeholder="Provide technical specifications, hardware specs, and key features..."
+              placeholder="Add product details and specifications..."
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             />

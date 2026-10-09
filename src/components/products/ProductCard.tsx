@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Product } from "@/types/product";
 import { formatCurrency } from "@/utils/formatters";
 import { DEFAULT_PRODUCT_IMAGE } from "@/utils/constants";
-import { ShoppingBag, Star, Tag, CheckCircle, AlertTriangle } from "lucide-react";
+import { ShoppingBag, Tag, CheckCircle, AlertTriangle, ArrowUpRight } from "lucide-react";
 
 import { useCart } from "@/context/CartContext";
 import { useState } from "react";
@@ -29,21 +29,26 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="card bg-base-200 border border-base-300 hover:border-primary/50 shadow-xl hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 group overflow-hidden flex flex-col justify-between">
-      <div>
+    <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-base-300/80 bg-base-200/85 shadow-lg shadow-black/10 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10">
+      <div className="flex flex-1 flex-col">
         {/* Product Image & Badges */}
-        <Link href={`/gadgets/${product.id}`} className="relative h-52 w-full bg-base-300 overflow-hidden block">
+        <Link
+          href={`/gadgets/${product.id}`}
+          aria-label={`View ${product.title}`}
+          className="relative block aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-base-300 via-base-200 to-base-300"
+        >
           <Image
             src={imageUrl}
             alt={product.title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
             unoptimized
           />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-base-100/35 via-transparent to-black/15" />
           <div className="absolute top-3 left-3 flex flex-col gap-1 z-10">
             {product.category && (
-              <span className="badge badge-primary font-semibold text-xs gap-1 shadow-md">
+              <span className="badge badge-primary/90 border-0 font-semibold text-[10px] gap-1 shadow-md backdrop-blur">
                 <Tag className="w-3 h-3" />
                 {product.category.name}
               </span>
@@ -51,71 +56,70 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
           <div className="absolute top-3 right-3 z-10">
             {isOutOfStock ? (
-              <span className="badge badge-error gap-1 font-bold text-xs shadow-md text-white">
+              <span className="badge badge-error gap-1 font-bold text-[10px] shadow-md text-white">
                 <AlertTriangle className="w-3 h-3" />
                 Out of Stock
               </span>
             ) : (
-              <span className="badge badge-success gap-1 font-bold text-xs shadow-md text-base-100">
+              <span className="badge badge-success gap-1 font-bold text-[10px] shadow-md text-base-100">
                 <CheckCircle className="w-3 h-3" />
-                In Stock ({product.stock})
+                {product.stock <= 5 ? `Only ${product.stock} left` : "In Stock"}
               </span>
             )}
           </div>
         </Link>
 
         {/* Product Body */}
-        <div className="card-body p-5">
+        <div className="flex flex-1 flex-col p-5">
           <Link href={`/gadgets/${product.id}`}>
-            <h2 className="card-title text-lg font-bold group-hover:text-primary transition line-clamp-1">
+            <h2 className="line-clamp-2 min-h-12 text-base font-bold leading-6 text-base-content transition-colors group-hover:text-primary sm:text-lg">
               {product.title}
             </h2>
           </Link>
 
-          <p className="text-xs text-base-content/70 line-clamp-2 h-9 mt-1">
-            {product.description || "High-performance smart gadget designed for modern digital workflow and automation."}
-          </p>
-
-          {/* Rating preview */}
-          <div className="flex items-center gap-1 mt-2 text-warning">
-            <Star className="w-4 h-4 fill-warning text-warning" />
-            <span className="text-xs font-bold text-base-content">4.9</span>
-            <span className="text-xs text-base-content/50">(24 reviews)</span>
-          </div>
+          {product.description && (
+            <p className="mt-2 line-clamp-2 min-h-9 text-xs leading-relaxed text-base-content/65">
+              {product.description}
+            </p>
+          )}
         </div>
       </div>
 
       {/* Footer Price & Add to Cart */}
-      <div className="p-5 pt-0">
-        <div className="flex justify-between items-center pt-3 border-t border-base-300">
+      <div className="px-5 pb-5">
+        <div className="flex flex-col gap-4 border-t border-base-300/80 pt-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col">
-            <span className="text-[10px] text-base-content/50 uppercase font-semibold">Price</span>
-            <span className="text-xl font-extrabold text-primary">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-base-content/50">Price</span>
+            <span className="text-xl font-extrabold tabular-nums text-primary">
               {formatCurrency(product.price)}
             </span>
           </div>
 
           <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={handleAddToCart}
               disabled={isOutOfStock}
-              className={`btn btn-sm rounded-xl gap-1 shadow-lg transition ${
-                added ? "btn-success text-white" : "btn-primary shadow-primary/20 hover:scale-105"
+              aria-label={`${added ? "Added" : "Add"} ${product.title} to cart`}
+              className={`btn btn-sm flex-1 rounded-xl shadow-primary/20 transition sm:flex-none ${
+                added ? "btn-success text-white" : "btn-primary shadow-lg hover:shadow-primary/30"
               }`}
               title="Add to Shopping Cart"
             >
-              <ShoppingBag className="w-3.5 h-3.5" />
+              {added ? <CheckCircle className="h-4 w-4" /> : <ShoppingBag className="h-4 w-4" />}
               {added ? "Added!" : "Add to Cart"}
             </button>
 
-            <Link href={`/gadgets/${product.id}`}>
-              <button className="btn btn-outline btn-sm rounded-xl text-xs">
-                Details
-              </button>
+            <Link
+              href={`/gadgets/${product.id}`}
+              className="btn btn-ghost btn-square btn-sm rounded-xl"
+              aria-label={`View details for ${product.title}`}
+            >
+              <ArrowUpRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

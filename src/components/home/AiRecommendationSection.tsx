@@ -1,32 +1,48 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { useCategories } from "@/hooks/useCategories";
 import { Product } from "@/types/product";
 import ProductCard from "@/components/products/ProductCard";
 import Button from "@/components/ui/Button";
-import { Bot, Sparkles, CheckCircle2, ArrowRight, Zap } from "lucide-react";
+import { Bot, Sparkles, ArrowRight, SlidersHorizontal } from "lucide-react";
 
 interface AiRecommendationSectionProps {
   products?: Product[];
 }
 
 export default function AiRecommendationSection({ products = [] }: AiRecommendationSectionProps) {
-  const [selectedIntent, setSelectedIntent] = useState<string>("ALL");
+  const { data: categories } = useCategories();
+  const [selectedCategoryId, setSelectedCategoryId] = useState("all");
   const [maxBudget, setMaxBudget] = useState<number>(500);
 
-  const intents = [
-    { id: "ALL", label: "Any Category Intent" },
-    { id: "SMART_HOME", label: "Smart Home Automation" },
-    { id: "WEARABLES", label: "Health & Wearables" },
-    { id: "DEV_HARDWARE", label: "Developer & AI Tools" },
-  ];
+  const recommendedProducts = products
+    .filter((product) => {
+      const price =
+        typeof product.price === "number"
+          ? product.price
+          : Number.parseFloat(product.price);
 
-  // Filter recommendations based on client budget and intent matching
-  const recommendedProducts = products.filter((item) => {
-    const price = typeof item.price === "string" ? parseFloat(item.price) : item.price;
-    const matchesBudget = isNaN(price) || price <= maxBudget;
-    return matchesBudget;
-  }).slice(0, 3); // Take top 3 matches
+      return (
+        Number.isFinite(price) &&
+        price <= maxBudget &&
+        (selectedCategoryId === "all" ||
+          product.categoryId === selectedCategoryId)
+      );
+    })
+    .sort((first, second) => {
+      const firstPrice =
+        typeof first.price === "number"
+          ? first.price
+          : Number.parseFloat(first.price);
+      const secondPrice =
+        typeof second.price === "number"
+          ? second.price
+          : Number.parseFloat(second.price);
+      return firstPrice - secondPrice;
+    })
+    .slice(0, 3);
 
   return (
     <section id="ai-recommendations" className="py-20 bg-gradient-to-b from-base-100 via-base-200/40 to-base-100 border-b border-base-300">
@@ -40,54 +56,72 @@ export default function AiRecommendationSection({ products = [] }: AiRecommendat
             
             {/* Header Description */}
             <div className="lg:col-span-7 space-y-3">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-xs font-bold">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-secondary/20 bg-secondary/10 px-3 py-1 text-xs font-bold text-secondary">
                 <Bot className="w-4 h-4" />
-                <span>AI Recommendation Engine</span>
+                <span>Smart catalog picks</span>
               </div>
 
               <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-base-content">
-                Get Personalized <span className="gradient-title">Gadget Recommendations</span>
+                Find the right tech <span className="gradient-title">for your budget</span>
               </h2>
 
               <p className="text-xs sm:text-sm text-base-content/70 max-w-xl">
-                Configure your budget and technical requirements below to instantly generate matching hardware recommendations.
+                Narrow the live catalog by price and category. For conversational
+                recommendations, ask the GadgetAI Copilot.
               </p>
+              <Link
+                href="/assistant"
+                className="inline-flex items-center gap-1 text-xs font-bold text-primary transition-colors hover:text-info"
+              >
+                Chat with GadgetAI Copilot
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
 
             {/* Interactive Form Controls */}
             <div className="lg:col-span-5 bg-base-100/90 border border-base-300 rounded-2xl p-5 space-y-4 shadow-md">
               <div>
-                <label className="text-xs font-bold text-base-content/80 block mb-2">
-                  Select Primary Tech Focus
+                <label
+                  htmlFor="recommendation-category"
+                  className="mb-2 block text-xs font-bold text-base-content/80"
+                >
+                  <span className="inline-flex items-center gap-1.5">
+                    <SlidersHorizontal className="h-3.5 w-3.5 text-primary" />
+                    Category
+                  </span>
                 </label>
-                <div className="grid grid-cols-2 gap-2">
-                  {intents.map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => setSelectedIntent(item.id)}
-                      className={`btn btn-xs rounded-xl font-semibold text-[11px] justify-start gap-1 transition ${
-                        selectedIntent === item.id ? "btn-primary" : "btn-ghost bg-base-200"
-                      }`}
-                    >
-                      <CheckCircle2 className="w-3 h-3 shrink-0" />
-                      <span className="truncate">{item.label}</span>
-                    </button>
+                <select
+                  id="recommendation-category"
+                  className="select select-bordered select-sm w-full rounded-xl bg-base-200"
+                  value={selectedCategoryId}
+                  onChange={(event) => setSelectedCategoryId(event.target.value)}
+                >
+                  <option value="all">All categories</option>
+                  {categories?.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
                   ))}
-                </div>
+                </select>
               </div>
 
               <div>
-                <div className="flex justify-between text-xs font-bold text-base-content/80 mb-1">
-                  <span>Max Budget Filter</span>
+                <label
+                  htmlFor="recommendation-budget"
+                  className="mb-1 flex justify-between text-xs font-bold text-base-content/80"
+                >
+                  <span>Maximum budget</span>
                   <span className="text-primary font-mono">${maxBudget}</span>
-                </div>
+                </label>
                 <input
+                  id="recommendation-budget"
                   type="range"
                   min="50"
                   max="2000"
                   step="50"
                   value={maxBudget}
                   onChange={(e) => setMaxBudget(Number(e.target.value))}
+                  aria-valuetext={`Up to $${maxBudget}`}
                   className="range range-xs range-primary w-full"
                 />
               </div>
@@ -100,7 +134,8 @@ export default function AiRecommendationSection({ products = [] }: AiRecommendat
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-sm font-extrabold uppercase tracking-wider text-base-content/80 flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4 text-primary" />
-                AI Curated Matches ({recommendedProducts.length})
+                {recommendedProducts.length} matching{" "}
+                {recommendedProducts.length === 1 ? "gadget" : "gadgets"}
               </h3>
             </div>
 
@@ -113,7 +148,8 @@ export default function AiRecommendationSection({ products = [] }: AiRecommendat
             ) : (
               <div className="p-8 text-center bg-base-100/60 rounded-2xl border border-dashed border-base-300">
                 <p className="text-xs text-base-content/60">
-                  No products matched budget under ${maxBudget}. Adjust budget slider above to expand options.
+                  No catalog items match these filters under ${maxBudget}. Try
+                  another category or increase your budget.
                 </p>
               </div>
             )}

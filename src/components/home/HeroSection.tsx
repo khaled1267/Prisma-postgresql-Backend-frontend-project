@@ -1,8 +1,14 @@
 "use client";
 
-import Link from "next/link";
-import { Cpu, Sparkles, ArrowRight, Bot, ShieldCheck, Zap, Layers } from "lucide-react";
+import dynamic from "next/dynamic";
+import { ArrowRight, Bot, Boxes, Search, Sparkles } from "lucide-react";
 import Button from "@/components/ui/Button";
+import GadgetSceneFallback from "@/components/home/GadgetSceneFallback";
+
+const GadgetScene = dynamic(() => import("@/components/home/GadgetScene"), {
+  ssr: false,
+  loading: () => <GadgetSceneFallback />,
+});
 
 interface HeroSectionProps {
   onOpenAiRecommendation: () => void;
@@ -12,135 +18,117 @@ interface HeroSectionProps {
 
 export default function HeroSection({
   onOpenAiRecommendation,
-  totalProducts = 0,
-  totalCategories = 0,
+  totalProducts,
+  totalCategories,
 }: HeroSectionProps) {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-base-200/90 via-base-100 to-base-100 py-16 lg:py-24 border-b border-base-300">
-      {/* Subtle Background Glow Elements */}
-      <div className="absolute -top-32 -right-32 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 -left-32 w-96 h-96 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
+    <section className="relative isolate overflow-hidden border-b border-base-300 bg-gradient-to-b from-base-200/90 via-base-100 to-base-100 py-14 sm:py-16 lg:py-20">
+      <div className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
+      <div className="pointer-events-none absolute -left-32 top-1/2 h-96 w-96 rounded-full bg-secondary/10 blur-3xl" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
-          {/* Left Text Content */}
-          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold shadow-sm">
-              <Sparkles className="w-4 h-4 animate-spin" />
-              <span>Next-Gen Smart Electronics Marketplace</span>
-            </div>
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 px-4 sm:px-6 lg:grid-cols-12 lg:gap-8 lg:px-8">
+        <div className="space-y-6 text-center lg:col-span-7 lg:text-left">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1.5 text-xs font-bold text-primary shadow-sm">
+            <Sparkles className="h-4 w-4 motion-safe:animate-pulse" />
+            <span>Next-Gen Smart Electronics Marketplace</span>
+          </div>
 
-            <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-tight">
-              The Future of Tech, <br />
-              <span className="gradient-title">Powered by AI Curation</span>
-            </h1>
+          <h1 className="text-4xl font-black leading-tight tracking-tight sm:text-6xl">
+            The Future of Tech, <br />
+            <span className="gradient-title">Powered by AI Curation</span>
+          </h1>
 
-            <p className="text-sm sm:text-base text-base-content/70 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-              Explore high-performance smart wearables, autonomous drones, home automation systems, and developer hardware—curated by intelligent algorithm models.
-            </p>
+          <p className="mx-auto max-w-2xl text-sm leading-relaxed text-base-content/70 sm:text-base lg:mx-0">
+            Explore real marketplace listings, check current availability, and
+            ask the GadgetAI Copilot to help compare the technology that fits
+            your needs.
+          </p>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2">
-              <a href="#featured-gadgets">
-                <Button
-                  variant="primary"
-                  size="lg"
-                  rightIcon={<ArrowRight className="w-4 h-4" />}
-                >
-                  Explore Gadgets
-                </Button>
-              </a>
-
+          <div className="flex flex-col items-center justify-center gap-3 pt-2 sm:flex-row lg:justify-start">
+            <a href="#featured-gadgets">
               <Button
-                variant="outline"
+                variant="primary"
                 size="lg"
-                onClick={onOpenAiRecommendation}
-                leftIcon={<Bot className="w-5 h-5 text-secondary" />}
+                rightIcon={<ArrowRight className="h-4 w-4" />}
               >
-                Get AI Recommendation
+                Explore Gadgets
               </Button>
+            </a>
+
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={onOpenAiRecommendation}
+              leftIcon={<Bot className="h-5 w-5 text-secondary" />}
+            >
+              Get AI Recommendation
+            </Button>
+          </div>
+
+          <div className="mx-auto grid max-w-lg grid-cols-3 gap-4 border-t border-base-300/80 pt-6 lg:mx-0">
+            <div>
+              <div className="text-2xl font-black text-primary">
+                {totalProducts ?? "—"}
+              </div>
+              <div className="text-xs font-medium text-base-content/60">Products</div>
             </div>
 
-            {/* Live Metrics Pills */}
-            <div className="pt-6 border-t border-base-300/80 grid grid-cols-3 gap-4 max-w-lg mx-auto lg:mx-0">
-              <div>
-                <div className="text-2xl font-black text-primary">
-                  {totalProducts > 0 ? `${totalProducts}+` : "100+"}
-                </div>
-                <div className="text-xs text-base-content/60 font-medium">Smart Gadgets</div>
+            <div>
+              <div className="text-2xl font-black text-secondary">
+                {totalCategories ?? "—"}
               </div>
-
-              <div>
-                <div className="text-2xl font-black text-secondary">
-                  {totalCategories > 0 ? totalCategories : "8+"}
-                </div>
-                <div className="text-xs text-base-content/60 font-medium">Categories</div>
+              <div className="text-xs font-medium text-base-content/60">
+                Categories
               </div>
+            </div>
 
-              <div>
-                <div className="text-2xl font-black text-success">99.9%</div>
-                <div className="text-xs text-base-content/60 font-medium">API Uptime</div>
+            <div>
+              <div className="text-2xl font-black text-success">AI</div>
+              <div className="text-xs font-medium text-base-content/60">
+                Product discovery
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Right Gadget-Themed Visual Preview */}
-          <div className="lg:col-span-5 relative">
-            <div className="relative mx-auto max-w-md bg-gradient-to-tr from-base-200 to-base-300 border border-base-300/80 rounded-3xl p-6 shadow-2xl overflow-hidden group">
-              {/* Top Card Header */}
-              <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-error" />
-                  <div className="w-3 h-3 rounded-full bg-warning" />
-                  <div className="w-3 h-3 rounded-full bg-success" />
-                </div>
-                <span className="badge badge-primary badge-sm font-bold gap-1 text-[10px]">
-                  <ShieldCheck className="w-3 h-3" /> Live Render API
-                </span>
+        <div className="relative mx-auto w-full max-w-xl lg:col-span-5">
+          <div className="pointer-events-none absolute inset-x-[12%] top-[12%] aspect-square rounded-full border border-primary/10" />
+          <div className="pointer-events-none absolute inset-x-[20%] top-[20%] aspect-square rounded-full border border-secondary/15" />
+          <div className="relative h-[340px] w-full sm:h-[440px] lg:h-[500px]">
+            <GadgetScene />
+          </div>
+
+          <div className="pointer-events-none absolute left-2 top-2 flex items-center gap-2 rounded-full border border-base-300/80 bg-base-100/80 px-3 py-2 text-[9px] font-bold text-base-content/75 shadow-lg backdrop-blur sm:left-0 sm:top-8 sm:text-[10px]">
+            <span className="h-2 w-2 rounded-full bg-success shadow-[0_0_12px_rgba(52,211,153,0.8)]" />
+            <span className="sm:hidden">DRAG TO EXPLORE</span>
+            <span className="hidden sm:inline">INTERACTIVE 3D PREVIEW</span>
+          </div>
+
+          <div className="pointer-events-none absolute bottom-3 left-1 right-1 flex items-end justify-between gap-3 sm:bottom-6 sm:left-2 sm:right-2">
+            <div className="rounded-2xl border border-base-300/80 bg-base-100/85 p-3 shadow-xl backdrop-blur-md sm:p-4">
+              <div className="mb-1 flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-primary">
+                <Sparkles className="h-3 w-3" />
+                AI product discovery
               </div>
-
-              {/* Central Holographic Gadget Preview */}
-              <div className="relative h-64 bg-base-100/80 rounded-2xl border border-primary/20 p-6 flex flex-col items-center justify-center text-center shadow-inner group-hover:border-primary/50 transition duration-500">
-                <div className="w-20 h-20 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-primary mb-4 shadow-lg shadow-primary/20 animate-pulse">
-                  <Cpu className="w-10 h-10" />
-                </div>
-                <h3 className="text-lg font-extrabold text-base-content">
-                  Neural Core X1 Wearable
-                </h3>
-                <p className="text-xs text-base-content/60 mt-1">
-                  Autonomous AI Assistant with Real-time Biomarker Tracking
-                </p>
-
-                <div className="mt-4 flex items-center gap-3">
-                  <span className="text-xl font-black text-primary">$349.99</span>
-                  <span className="badge badge-success badge-sm font-bold text-base-100">
-                    In Stock
-                  </span>
-                </div>
+              <div className="text-xs font-extrabold text-base-content sm:text-sm">
+                Find your next gadget
               </div>
+              <div className="mt-1 text-[10px] text-base-content/55">
+                Search · compare · discover
+              </div>
+            </div>
 
-              {/* Floating Stat Badges */}
-              <div className="mt-4 grid grid-cols-2 gap-3">
-                <div className="p-3 bg-base-100/60 rounded-xl border border-base-300 text-xs flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-warning shrink-0" />
-                  <div>
-                    <div className="font-bold">Next-Day Ship</div>
-                    <div className="text-[10px] text-base-content/50">Verified Order</div>
-                  </div>
-                </div>
-
-                <div className="p-3 bg-base-100/60 rounded-xl border border-base-300 text-xs flex items-center gap-2">
-                  <Layers className="w-4 h-4 text-info shrink-0" />
-                  <div>
-                    <div className="font-bold">Prisma ORM</div>
-                    <div className="text-[10px] text-base-content/50">PostgreSQL Sync</div>
-                  </div>
-                </div>
+            <div className="grid gap-2">
+              <div className="flex items-center gap-2 rounded-xl border border-base-300/80 bg-base-100/85 px-3 py-2 text-[10px] shadow-lg backdrop-blur-md">
+                <Boxes className="h-4 w-4 shrink-0 text-success" />
+                <span className="font-semibold">Live catalog</span>
+              </div>
+              <div className="flex items-center gap-2 rounded-xl border border-base-300/80 bg-base-100/85 px-3 py-2 text-[10px] shadow-lg backdrop-blur-md">
+                <Search className="h-4 w-4 shrink-0 text-warning" />
+                <span className="font-semibold">Find your fit</span>
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </section>

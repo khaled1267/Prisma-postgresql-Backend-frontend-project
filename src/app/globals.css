@@ -3,17 +3,31 @@
 @tailwind utilities;
 
 :root {
-  --font-inter: 'Inter', sans-serif;
+  --font-inter: "Inter", sans-serif;
+  color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 body {
   font-family: var(--font-inter);
   background-color: #0b0f19;
+  background-image:
+    radial-gradient(ellipse at 8% 12%, rgba(0, 242, 254, 0.055), transparent 34rem),
+    radial-gradient(ellipse at 92% 34%, rgba(121, 40, 202, 0.045), transparent 38rem);
   color: #f3f4f6;
   min-height: 100vh;
 }
 
-/* Glassmorphism helpers */
+::selection {
+  background: rgba(0, 242, 254, 0.28);
+  color: #f3f4f6;
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid #00f2fe;
+  outline-offset: 3px;
+}
+
 .glass-panel {
   background: rgba(17, 24, 39, 0.65);
   backdrop-filter: blur(16px);
@@ -25,4 +39,29 @@ body {
   background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #7928ca 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.surface-panel {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(
+    145deg,
+    rgba(17, 24, 39, 0.92),
+    rgba(11, 15, 25, 0.88)
+  );
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -67,7 +67,7 @@ export default function CartPage() {
 
         {/* Empty Cart State */}
         {!isLoading && cartItems.length === 0 && (
-          <div className="bg-base-200 border border-base-300 rounded-3xl p-12 text-center max-w-lg mx-auto my-8 shadow-xl space-y-4">
+          <div className="surface-panel mx-auto my-8 max-w-lg space-y-4 rounded-3xl p-8 text-center sm:p-12">
             <div className="p-4 rounded-full bg-primary/10 text-primary w-20 h-20 mx-auto flex items-center justify-center border border-primary/20">
               <ShoppingBag className="w-10 h-10" />
             </div>
@@ -91,7 +91,7 @@ export default function CartPage() {
             
             {/* Left 2 Columns: Items List */}
             <div className="lg:col-span-2 space-y-4">
-              <div className="bg-base-200 border border-base-300 rounded-3xl shadow-xl overflow-hidden p-6 space-y-4">
+              <div className="surface-panel space-y-4 overflow-hidden rounded-3xl p-4 sm:p-6">
                 <div className="text-xs font-bold uppercase tracking-wider text-base-content/60 border-b border-base-300 pb-3">
                   Cart Items ({cartCount} {cartCount === 1 ? "unit" : "units"})
                 </div>
@@ -183,25 +183,24 @@ export default function CartPage() {
                 </div>
               </div>
 
-              {/* Guarantees Footer Banner */}
-              <div className="grid grid-cols-3 gap-3 text-[11px] text-base-content/70">
+              <div className="grid grid-cols-1 gap-3 text-[11px] text-base-content/70 sm:grid-cols-3">
                 <div className="p-3 bg-base-200 rounded-2xl border border-base-300 text-center flex items-center justify-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
-                  <span className="font-bold">Encrypted Checkout</span>
+                  <span className="font-bold">Account-protected cart</span>
                 </div>
                 <div className="p-3 bg-base-200 rounded-2xl border border-base-300 text-center flex items-center justify-center gap-2">
                   <Truck className="w-4 h-4 text-info shrink-0" />
-                  <span className="font-bold">Fast Hardware Delivery</span>
+                  <span className="font-bold">Shipping shown up front</span>
                 </div>
                 <div className="p-3 bg-base-200 rounded-2xl border border-base-300 text-center flex items-center justify-center gap-2">
                   <RotateCcw className="w-4 h-4 text-accent shrink-0" />
-                  <span className="font-bold">30-Day Money Back</span>
+                  <span className="font-bold">Edit items before checkout</span>
                 </div>
               </div>
             </div>
 
             {/* Right 1 Column: Order Summary Sidebar */}
-            <div className="bg-base-200 border border-base-300 rounded-3xl p-6 shadow-xl h-fit space-y-5">
+            <div className="surface-panel h-fit space-y-5 rounded-3xl p-5 sm:p-6">
               <h2 className="font-black text-lg text-base-content border-b border-base-300 pb-3">
                 Order Summary
               </h2>

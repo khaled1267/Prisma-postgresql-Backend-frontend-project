@@ -15,21 +15,21 @@ import { Search, Filter, SlidersHorizontal, RefreshCw, XCircle } from "lucide-re
 function GadgetsContent() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get("category");
+  const searchParam = searchParams.get("q") || "";
 
   const { data: products, isLoading, isError, error, refetch } = useProducts();
   const { data: categories } = useCategories();
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(searchParam);
   const [selectedCategory, setSelectedCategory] = useState(categoryParam || "all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
 
   // Keep category param in sync if query param changes
   useEffect(() => {
-    if (categoryParam) {
-      setSelectedCategory(categoryParam);
-    }
-  }, [categoryParam]);
+    setSelectedCategory(categoryParam || "all");
+    setSearchQuery(searchParam);
+  }, [categoryParam, searchParam]);
 
   // Filter & Sort Logic
   const filteredProducts = useMemo(() => {
@@ -76,12 +76,13 @@ function GadgetsContent() {
   return (
     <>
       {/* Search & Filtering Controls Header */}
-      <div className="bg-base-200 border border-base-300 rounded-3xl p-5 mb-8 shadow-lg space-y-4">
+      <div className="surface-panel mb-8 space-y-4 rounded-3xl p-4 sm:p-6">
         
         {/* Search Bar */}
         <div className="flex flex-col md:flex-row gap-3">
           <div className="flex-1">
             <Input
+              label="Search the catalog"
               placeholder="Search gadgets by title or specs..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -116,12 +117,13 @@ function GadgetsContent() {
           
           {/* Category Dropdown */}
           <div>
-            <label className="label py-1">
-              <span className="label-text font-semibold text-xs flex items-center gap-1">
+            <label htmlFor="catalog-category" className="label py-1">
+              <span className="label-text flex items-center gap-1 text-xs font-semibold">
                 <Filter className="w-3 h-3 text-primary" /> Category
               </span>
             </label>
             <select
+              id="catalog-category"
               className="select select-bordered select-sm w-full bg-base-100 rounded-xl"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
@@ -137,12 +139,13 @@ function GadgetsContent() {
 
           {/* Stock / Status Dropdown */}
           <div>
-            <label className="label py-1">
-              <span className="label-text font-semibold text-xs flex items-center gap-1">
+            <label htmlFor="catalog-stock" className="label py-1">
+              <span className="label-text flex items-center gap-1 text-xs font-semibold">
                 <SlidersHorizontal className="w-3 h-3 text-primary" /> Stock Availability
               </span>
             </label>
             <select
+              id="catalog-stock"
               className="select select-bordered select-sm w-full bg-base-100 rounded-xl"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
@@ -155,10 +158,11 @@ function GadgetsContent() {
 
           {/* Sorting Dropdown */}
           <div>
-            <label className="label py-1">
-              <span className="label-text font-semibold text-xs">Sort By</span>
+            <label htmlFor="catalog-sort" className="label py-1">
+              <span className="label-text text-xs font-semibold">Sort By</span>
             </label>
             <select
+              id="catalog-sort"
               className="select select-bordered select-sm w-full bg-base-100 rounded-xl"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
@@ -176,7 +180,16 @@ function GadgetsContent() {
       {/* Result Count Status */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-sm font-bold text-base-content/80">
-          Showing <span className="text-primary">{filteredProducts.length}</span> Gadgets
+          {isLoading ? (
+            "Loading catalog..."
+          ) : isError ? (
+            "Catalog unavailable"
+          ) : (
+            <>
+              Showing <span className="text-primary">{filteredProducts.length}</span>{" "}
+              {filteredProducts.length === 1 ? "gadget" : "gadgets"}
+            </>
+          )}
         </h2>
 
         {(searchQuery || selectedCategory !== "all" || statusFilter !== "all" || sortBy !== "newest") && (
@@ -208,7 +221,7 @@ function GadgetsContent() {
 
       {/* Empty Filter Result State */}
       {!isLoading && !isError && filteredProducts.length === 0 && (
-        <div className="bg-base-200 border border-base-300 rounded-3xl p-12 text-center max-w-lg mx-auto">
+        <div className="surface-panel mx-auto max-w-lg rounded-3xl p-8 text-center sm:p-12">
           <XCircle className="w-16 h-16 text-error/50 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-base-content mb-1">No Gadgets Found</h3>
           <p className="text-xs text-base-content/60 mb-6">
@@ -236,8 +249,8 @@ export default function ExploreGadgetsPage() {
   return (
     <PageContainer
       maxWidth="7xl"
-      title="Explore Smart Gadgets Marketplace"
-      description="Discover cutting-edge AI devices, smart wearables, and next-gen hardware."
+      title="Explore the gadget catalog"
+      description="Search product listings, compare prices, and filter by category or current stock."
     >
       <Suspense fallback={<LoadingComponent message="Loading gadget marketplace..." />}>
         <GadgetsContent />

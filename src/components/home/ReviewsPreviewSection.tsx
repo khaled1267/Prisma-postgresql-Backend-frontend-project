@@ -1,21 +1,33 @@
 "use client";
 
 import { Review } from "@/types/review";
-import { Star, MessageSquareQuote, UserCheck, Sparkles } from "lucide-react";
+import { Star, MessageSquareQuote } from "lucide-react";
 import { formatDate } from "@/utils/formatters";
 import LoadingComponent from "@/components/common/LoadingComponent";
+import ErrorComponent from "@/components/common/ErrorComponent";
 
 interface ReviewsPreviewSectionProps {
   reviews?: Review[];
   isLoading?: boolean;
+  isError?: boolean;
+  errorMessage?: string;
 }
 
 export default function ReviewsPreviewSection({
   reviews = [],
   isLoading = false,
+  isError = false,
+  errorMessage,
 }: ReviewsPreviewSectionProps) {
   // Show top 3 latest reviews
   const previewReviews = reviews.slice(0, 3);
+  const averageRating =
+    reviews.length > 0
+      ? (
+          reviews.reduce((total, review) => total + review.rating, 0) /
+          reviews.length
+        ).toFixed(1)
+      : null;
 
   return (
     <section className="py-20 bg-base-100 border-b border-base-300">
@@ -26,29 +38,37 @@ export default function ReviewsPreviewSection({
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary mb-2">
               <MessageSquareQuote className="w-4 h-4" />
-              <span>Verified Customer Feedback</span>
+              <span>Customer Feedback</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-base-content">
               Community <span className="gradient-title">Reviews & Ratings</span>
             </h2>
           </div>
 
-          <div className="flex items-center gap-2 bg-base-200 px-4 py-2 rounded-2xl border border-base-300">
-            <div className="flex items-center text-warning">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-4 h-4 fill-warning" />
-              ))}
+          {averageRating && (
+            <div className="flex items-center gap-2 rounded-2xl border border-base-300 bg-base-200 px-4 py-2">
+              <Star className="h-4 w-4 fill-warning text-warning" />
+              <span className="text-sm font-bold text-base-content">
+                {averageRating} / 5
+              </span>
+              <span className="text-xs text-base-content/50">
+                from {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
+              </span>
             </div>
-            <span className="font-bold text-sm text-base-content">4.9 / 5.0</span>
-            <span className="text-xs text-base-content/50">({reviews.length} total)</span>
-          </div>
+          )}
         </div>
 
         {/* Loading State */}
         {isLoading && <LoadingComponent variant="skeleton" message="Loading verified customer reviews..." />}
+        {isError && (
+          <ErrorComponent
+            title="Unable to load customer reviews"
+            message={errorMessage || "Please try again later."}
+          />
+        )}
 
         {/* Reviews Cards Grid */}
-        {!isLoading && previewReviews.length > 0 && (
+        {!isLoading && !isError && previewReviews.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {previewReviews.map((review) => (
               <div
@@ -69,9 +89,15 @@ export default function ReviewsPreviewSection({
                   </div>
 
                   {/* Comment */}
-                  <p className="text-xs text-base-content/80 line-clamp-3 leading-relaxed mb-4 italic">
-                    "{review.comment || "High-quality smart gadget. Exceeded expectations in daily performance and software integration."}"
-                  </p>
+                  {review.comment ? (
+                    <p className="mb-4 line-clamp-3 text-xs leading-relaxed text-base-content/80 italic">
+                      “{review.comment}”
+                    </p>
+                  ) : (
+                    <p className="mb-4 text-xs text-base-content/50">
+                      Rating only · no written comment
+                    </p>
+                  )}
                 </div>
 
                 {/* Reviewer & Product Info */}
@@ -82,7 +108,7 @@ export default function ReviewsPreviewSection({
                     </div>
                     <div>
                       <div className="font-bold text-xs text-base-content line-clamp-1">
-                        {review.user?.name || "Verified Customer"}
+                        {review.user?.name || "Marketplace member"}
                       </div>
                       <div className="text-[10px] text-base-content/50">
                         {formatDate(review.createdAt)}
@@ -102,7 +128,7 @@ export default function ReviewsPreviewSection({
         )}
 
         {/* Empty State */}
-        {!isLoading && previewReviews.length === 0 && (
+        {!isLoading && !isError && previewReviews.length === 0 && (
           <div className="p-8 text-center bg-base-200/50 rounded-2xl border border-dashed border-base-300">
             <MessageSquareQuote className="w-10 h-10 text-base-content/30 mx-auto mb-2" />
             <p className="text-xs text-base-content/60">No customer reviews published yet.</p>

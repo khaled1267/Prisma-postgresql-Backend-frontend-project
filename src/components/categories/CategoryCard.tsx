@@ -29,10 +29,11 @@ export default function CategoryCard({ category }: CategoryCardProps) {
           {category.name}
         </h3>
 
-        <p className="text-xs text-base-content/70 mt-2 line-clamp-2 leading-relaxed">
-          {category.description ||
-            `Explore our curated selection of high-tech ${category.name.toLowerCase()} hardware and smart automation devices.`}
-        </p>
+        {category.description && (
+          <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-base-content/70">
+            {category.description}
+          </p>
+        )}
       </div>
 
       <div className="mt-6 pt-4 border-t border-base-300 flex items-center justify-between text-xs font-bold text-primary group-hover:translate-x-1 transition-transform">

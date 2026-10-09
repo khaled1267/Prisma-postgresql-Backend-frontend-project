@@ -39,9 +39,10 @@ export default function CategoriesPage() {
       }
     >
       {/* Search Header Controls */}
-      <div className="bg-base-200 border border-base-300 rounded-3xl p-5 mb-8 shadow-lg flex flex-col sm:flex-row gap-3 items-center justify-between">
+      <div className="surface-panel mb-8 flex flex-col items-center justify-between gap-3 rounded-3xl p-4 sm:flex-row sm:p-5">
         <div className="w-full sm:w-80">
           <Input
+            label="Search categories"
             placeholder="Search categories by name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}

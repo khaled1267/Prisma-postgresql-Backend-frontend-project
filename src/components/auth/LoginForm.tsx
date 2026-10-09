@@ -96,7 +96,7 @@ export default function LoginForm({ onSuccessRedirect }: LoginFormProps) {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-base-200 border border-base-300 shadow-2xl rounded-3xl p-6 sm:p-8">
+    <div className="surface-panel mx-auto w-full max-w-md rounded-3xl p-6 sm:p-8">
       
       {/* Form Header */}
       <div className="text-center mb-6">

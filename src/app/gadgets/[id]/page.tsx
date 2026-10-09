@@ -16,15 +16,13 @@ import { formatCurrency } from "@/utils/formatters";
 import { DEFAULT_PRODUCT_IMAGE } from "@/utils/constants";
 import {
   ShoppingBag,
-  Star,
   Tag,
   CheckCircle,
   AlertTriangle,
   ArrowLeft,
-  ShieldCheck,
-  Truck,
-  RotateCcw,
   MessageSquare,
+  Boxes,
+  ArrowRight,
 } from "lucide-react";
 
 interface GadgetDetailPageProps {
@@ -86,12 +84,12 @@ export default function GadgetDetailPage({ params }: GadgetDetailPageProps) {
       <div className="space-y-12">
         
         {/* Product Showcase Card */}
-        <div className="bg-base-200 border border-base-300 rounded-3xl p-6 sm:p-10 shadow-2xl">
+        <div className="surface-panel rounded-3xl p-5 sm:p-8 lg:p-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
             
             {/* Left: Product Image Showcase */}
             <div className="space-y-4">
-              <div className="relative h-80 sm:h-96 w-full bg-base-300 rounded-2xl overflow-hidden border border-base-300 shadow-inner">
+              <div className="relative h-80 w-full overflow-hidden rounded-3xl border border-base-300/80 bg-gradient-to-br from-base-300 via-base-200 to-base-300 shadow-inner sm:h-[28rem]">
                 <Image
                   src={imageUrl}
                   alt={product.title}
@@ -112,18 +110,18 @@ export default function GadgetDetailPage({ params }: GadgetDetailPageProps) {
               </div>
 
               {/* Guarantee Pills */}
-              <div className="grid grid-cols-3 gap-2 pt-2 text-[11px] text-base-content/70">
-                <div className="flex flex-col items-center justify-center p-3 bg-base-100/60 rounded-xl border border-base-300 text-center">
-                  <ShieldCheck className="w-5 h-5 text-primary mb-1" />
-                  <span className="font-semibold">Official Warranty</span>
+              <div className="grid grid-cols-3 gap-2 pt-1 text-center text-[10px] text-base-content/70 sm:text-[11px]">
+                <div className="flex flex-col items-center justify-center rounded-2xl border border-base-300 bg-base-100/60 p-3">
+                  <Boxes className="mb-1 h-5 w-5 text-primary" />
+                  <span className="font-semibold">Stock status</span>
                 </div>
-                <div className="flex flex-col items-center justify-center p-3 bg-base-100/60 rounded-xl border border-base-300 text-center">
-                  <Truck className="w-5 h-5 text-info mb-1" />
-                  <span className="font-semibold">Express Shipping</span>
-                </div>
-                <div className="flex flex-col items-center justify-center p-3 bg-base-100/60 rounded-xl border border-base-300 text-center">
-                  <RotateCcw className="w-5 h-5 text-accent mb-1" />
-                  <span className="font-semibold">30-Day Returns</span>
+                <a href="#product-reviews" className="flex flex-col items-center justify-center rounded-2xl border border-base-300 bg-base-100/60 p-3 transition-colors hover:border-primary/40 hover:text-primary">
+                  <MessageSquare className="mb-1 h-5 w-5 text-info" />
+                  <span className="font-semibold">Buyer reviews</span>
+                </a>
+                <div className="flex flex-col items-center justify-center rounded-2xl border border-base-300 bg-base-100/60 p-3">
+                  <ShoppingBag className="mb-1 h-5 w-5 text-secondary" />
+                  <span className="font-semibold">Add to cart</span>
                 </div>
               </div>
             </div>
@@ -131,7 +129,7 @@ export default function GadgetDetailPage({ params }: GadgetDetailPageProps) {
             {/* Right: Product Meta & Purchase Actions */}
             <div className="space-y-6">
               
-              {/* Stock & Rating Header */}
+              {/* Stock & Category Header */}
               <div className="flex items-center justify-between gap-2">
                 <div>
                   {isOutOfStock ? (
@@ -146,11 +144,15 @@ export default function GadgetDetailPage({ params }: GadgetDetailPageProps) {
                     </span>
                   )}
                 </div>
-
-                <div className="flex items-center gap-1 bg-warning/10 text-warning px-3 py-1 rounded-full text-xs font-bold border border-warning/20">
-                  <Star className="w-4 h-4 fill-warning text-warning" />
-                  <span>4.9 / 5.0</span>
-                </div>
+                {product.category && (
+                  <Link
+                    href={`/gadgets?category=${product.categoryId}`}
+                    className="badge badge-ghost gap-1.5 border border-base-300 px-3 py-3 text-xs font-semibold transition-colors hover:border-primary/40 hover:text-primary"
+                  >
+                    <Tag className="h-3.5 w-3.5" />
+                    {product.category.name}
+                  </Link>
+                )}
               </div>
 
               {/* Title & Price */}
@@ -159,11 +161,18 @@ export default function GadgetDetailPage({ params }: GadgetDetailPageProps) {
                   {product.title}
                 </h1>
                 <div className="mt-3 flex items-baseline gap-3">
-                  <span className="text-3xl sm:text-4xl font-black text-primary">
+                  <span className="text-3xl font-black tabular-nums text-primary sm:text-4xl">
                     {formatCurrency(product.price)}
                   </span>
-                  <span className="text-xs text-base-content/50">Includes all local taxes</span>
                 </div>
+                <a
+                  href="#product-reviews"
+                  className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-base-content/60 transition-colors hover:text-primary"
+                >
+                  <MessageSquare className="h-3.5 w-3.5" />
+                  Ratings &amp; customer feedback
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </a>
               </div>
 
               {/* Description */}
@@ -173,20 +182,8 @@ export default function GadgetDetailPage({ params }: GadgetDetailPageProps) {
                 </h3>
                 <p className="text-sm text-base-content/80 leading-relaxed">
                   {product.description ||
-                    "High-performance smart hardware curated for seamless AI integration, ultra-low latency workflow automation, and long-term durability."}
+                    "The seller has not added a description for this item yet."}
                 </p>
-              </div>
-
-              {/* Category ID info */}
-              <div className="bg-base-100/80 p-4 rounded-2xl border border-base-300 text-xs space-y-1">
-                <div className="flex justify-between">
-                  <span className="text-base-content/60">Category ID:</span>
-                  <span className="font-mono text-base-content/80">{product.categoryId}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-base-content/60">System Product ID:</span>
-                  <span className="font-mono text-base-content/80 truncate max-w-[200px]">{product.id}</span>
-                </div>
               </div>
 
               {/* Add to Cart Actions */}
@@ -213,12 +210,12 @@ export default function GadgetDetailPage({ params }: GadgetDetailPageProps) {
         </div>
 
         {/* Customer Reviews & Feedback Section */}
-        <div className="space-y-8">
+        <div id="product-reviews" className="scroll-mt-24 space-y-8">
           <div className="border-b border-base-300 pb-4 flex items-center justify-between">
             <div>
               <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary mb-1">
                 <MessageSquare className="w-4 h-4" />
-                <span>Verified Buyer Feedback</span>
+                <span>Customer Feedback</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-black text-base-content tracking-tight">
                 Customer <span className="gradient-title">Reviews & Ratings</span>
